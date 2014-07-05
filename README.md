@@ -1,8 +1,8 @@
 # Async-Tests
+<br/>
+This library provides **async unit tests** by extending on haxe standard unit tests.
 
-This library provides *async unit tests* to haxe by extending the standard unit tests packages.
-
-# Install
+## Install
 ```
 haxelib install async-tests
 ```
@@ -11,18 +11,17 @@ haxelib install async-tests
 
 This lib consists of two files:
 
-**AsyncTestRunner** (extends haxe.unit.TestRunner) 
-**AsyncTestCase** (extends haxe.unit.TestCase)
+* **AsyncTestRunner** (extends haxe.unit.TestRunner) 
+* **AsyncTestCase** (extends haxe.unit.TestCase)
 
-So its usage its very similar to ***standard*** [haxe unit tests].(http://old.haxe.org/doc/cross/unit)
+Its usage is almost identical to using standard [haxe unit tests]
 
-```haxe
+```actionscript
 // Test runner class
 class MyTestRunner {
 	
 	static function main() {
 		var r = new async.tests.AsyncTestRunner(onComplete);
-		
 		r.add(new MyTestCase())
 		r.run();
 	}
@@ -35,6 +34,7 @@ class MyTestRunner {
 	}
 }
 ```
+ **AsyncTestRunner** constructor receives a callback to ```onComplete```, so it can notify the when all tests finish.
 ```actionscript
 class MyTestCase extends AsyncTestCase {
 
@@ -46,20 +46,34 @@ class MyTestCase extends AsyncTestCase {
 		
 		// executing the delegate, returns onAssetsLoaded function
 		// test only ends when delegate finishes executing or timesout
-		urlLoader.addEventListener(Event.COMPLETE, asyncDel());
+		urlLoader.addEventListener(Event.COMPLETE, createAsync(onTestsLoaded, 300));
 	}
 	
-	function onAssetsLoaded() {
+	function onAssetsLoaded(o:Dynamic) {
 		assertTrue(true);
 	}
 }
 ```
- * **AsyncTestRunner** now receives a callback **(onComplete)** on construction for when all tests finish.
- * **AsyncTestCase** now has **createAsyncDel(callback, timeout)** that allows to call methods asynchronously.
 
-## Notes
+**AsyncTestCase** has the special method:
+```actionscript
+createAsync(callback:Dynamic->Void, timeout:Int):Dynamic->Void
+``` 
+It generates a special callback, like a delegate that when invoked performs certain operations to guarantee that the test doesent terminate until the callback has finished or timeout occured.
 
-* When a delegate is executed it retrieves a callback, the test only terminates when the callback is executed or times-out.
-* The tests are sequential, test B only starts after test A finishes or times-out.
-* AsyncTestRunner can run haxe.unit.TestCase tests, asyncDelegates are not available tho.
-* AsyncTestCase can run inside haxe.unit.TestRunner, asyncDelegates can not be created tho.
+```actionscript
+// another alternative to perform same action
+var t = createAsync(onTestsLoaded, 300);
+urdLoader.addEventListener(Event.COMPLETE, t);
+```
+
+**!--Important--!** For simplicity, when ```createAsync()``` is called, the timeout starts counting immediatelly, so as a tip always create "asyncs" right before their execution. (this situation may change in the future).
+
+#Notes
+
+* Methods passed to ```createAsync()``` have the signature ```Dynamic->Void``` (other signatures maybe in the future).
+* **AsyncTestRunner** can run std TestCase and **AsyncTestCase** can run from std TestRunner (no async calls tho).
+
+
+
+[haxe unit tests]:http://old.haxe.org/doc/cross/unit

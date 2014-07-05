@@ -65,6 +65,7 @@ class AsyncTestRunner extends haxe.unit.TestRunner{
 			haxe.Log.trace = customTrace;
 			testCase = Lambda.array(cases)[caseIndex];
 			cl = Type.getClass(testCase);
+			print( "Class: "+Type.getClassName(cl)+" ");
 			if (Std.is(testCase, AsyncTestCase)) {
 				cast (testCase, AsyncTestCase).runner = this;
 			}
@@ -90,7 +91,7 @@ class AsyncTestRunner extends haxe.unit.TestRunner{
 			var field = Reflect.field(testCase, f);
 			testIndex++;
 			
-			if ( StringTools.startsWith(fname,"test") && Reflect.isFunction(field) ) {
+			if ( StringTools.startsWith(fname, "test") && Reflect.isFunction(field) ) {
 				testCase.currentTest = new TestStatus();
 				testCase.currentTest.classname = Type.getClassName(cl);
 				testCase.currentTest.method = fname;
@@ -113,13 +114,14 @@ class AsyncTestRunner extends haxe.unit.TestRunner{
 			}
 		} else {
 			// all tests finished, next test case.
+			print("\n");
+			haxe.Log.trace = oldTrace;
 			nextCase();
 		}
 	}
 	
 	@:allow(async.tests.AsyncTestCase)
 	function endTest(e:Dynamic = null) {
-		
 		if (Std.is(e,TestStatus)) {
 			print("F");
 			testCase.currentTest.backtrace = haxe.CallStack.toString(haxe.CallStack.exceptionStack());
@@ -135,23 +137,22 @@ class AsyncTestRunner extends haxe.unit.TestRunner{
 			testCase.currentTest.error = "exception thrown : "+e;
 			#end
 			testCase.currentTest.backtrace = haxe.CallStack.toString(haxe.CallStack.exceptionStack());
-		}
-		
-		if( testCase.currentTest.done ){
-			testCase.currentTest.success = true;
-			print(".");
 		} else {
-			testCase.currentTest.success = false;
-			testCase.currentTest.error = "(warning) no assert";
-			print("W");
+			if( testCase.currentTest.done ){
+				testCase.currentTest.success = true;
+				print(".");
+			} else {
+				testCase.currentTest.success = false;
+				testCase.currentTest.error = "(warning) no assert";
+				print("W");
+			}
 		}
 		
 		result.add(testCase.currentTest);
-		testCase.tearDown(); // teardown also cancels any async function calls, see AsyncTestCase.tearDown()
-		
-		
-		print("\n");
-		haxe.Log.trace = oldTrace;
+		if (Std.is(testCase, AsyncTestCase)) {
+			cast(testCase, AsyncTestCase).clearAsyncs();
+		}
+		testCase.tearDown(); 
 		nextTest();
 	}
 	
