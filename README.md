@@ -1,14 +1,10 @@
 # Async-Tests
-<br/>
-This library provides **async unit tests** by extending on haxe standard unit tests.
-
-## Install
+This library provides **async unit tests** by extending haxe standard unit tests.
+### Install
 ```
 haxelib install async-tests
 ```
-
-## Example
-
+### Example
 This lib consists of two files:
 
 * **AsyncTestRunner** (extends haxe.unit.TestRunner) 
@@ -16,7 +12,7 @@ This lib consists of two files:
 
 Its usage is almost identical to using standard [haxe unit tests]
 
-```actionscript
+```astionscript
 // Test runner class
 class MyTestRunner {
 	
@@ -71,7 +67,7 @@ urdLoader.addEventListener(Event.COMPLETE, t);
 
 #Notes
 
-* Methods passed to ```createAsync()``` have the signature ```Dynamic->Void``` (other signatures maybe in the future).
+* Methods passed to ```createAsync()``` have the signature ```Dynamic->Void``` (other signatures maybe available in the future).
 * **AsyncTestRunner** can run std TestCase and **AsyncTestCase** can run from std TestRunner (no async calls tho).
 
 
