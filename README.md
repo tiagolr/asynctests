@@ -43,7 +43,8 @@ class MyTestCase extends AsyncTestCase {
 	}
 	
 	function onAssetsLoaded(o:Dynamic) {
-		assertTrue(true);
+		var event = cast(o, Event);
+		assertTrue(event.type == Event.COMPLETE);
 	}
 }
 ```
