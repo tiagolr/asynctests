@@ -52,7 +52,7 @@ class MyTestCase extends AsyncTestCase {
 ```actionscript
 createAsync(callback:Dynamic->Void, timeout:Int):Dynamic->Void
 ``` 
-It generates a special callback, like a delegate that when invoked performs certain operations to guarantee that the test doesent terminate until the callback has finished or timeout occured.
+When ```createAsync(method)``` is called, it creates another method wrapped around the original, and keeps track how mutch time it takes to invoke it.
 
 ```actionscript
 // another alternative to perform same action
@@ -60,10 +60,10 @@ var t = createAsync(onTestsLoaded, 300);
 urdLoader.addEventListener(Event.COMPLETE, t);
 ```
 
-**!--Important--!** For simplicity, when ```createAsync()``` is called, the timeout starts counting immediatelly, so as a tip always create "asyncs" right before their execution. (this situation may change in the future).
 
 #Notes
 
+* When ```createAsync()``` is called, the timeout starts counting immediatelly, so always create "asyncs" right before invoking an operation that uses them.
 * Methods passed to ```createAsync()``` have the signature ```Dynamic->Void``` (other signatures maybe available in the future).
 * **AsyncTestRunner** can run std TestCase and **AsyncTestCase** can run from std TestRunner (no async calls tho).
 
