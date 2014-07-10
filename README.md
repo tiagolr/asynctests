@@ -34,11 +34,9 @@ class MyTestRunner {
 ```actionscript
 class MyTestCase extends AsyncTestCase {
 
-	// All tests are async capable inside AsyncTestCase
 	function testSampleAsync() {
 	
-		// executing the delegate, returns onAssetsLoaded function
-		// test only ends when delegate finishes executing or timesout
+		// test only ends when async created is executed or timesout
 		urlLoader.addEventListener(Event.COMPLETE, createAsync(onAssetsLoaded, 300));
 	}
 	
@@ -66,8 +64,8 @@ urdLoader.addEventListener(Event.COMPLETE, t);
 
 * When ```createAsync()``` is called, the timeout starts counting immediatelly, so always create "asyncs" right before invoking an operation that uses them.
 * Methods passed to ```createAsync()``` have the signature ```Dynamic->Void``` (other signatures maybe available in the future).
-* **AsyncTestRunner** can run std TestCase and **AsyncTestCase** can run from std TestRunner (no async calls tho).
-
+* **AsyncTestRunner** can run std **TestCase** and **AsyncTestCase** can run from std **TestRunner** (no async calls tho).
+* Inside **AsyncTestCase** normal tests support createAsync(), the test only ends when all asyncs created are executed or timed out.
 
 
 [haxe unit tests]:http://old.haxe.org/doc/cross/unit
