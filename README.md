@@ -36,13 +36,10 @@ class MyTestCase extends AsyncTestCase {
 
 	// All tests are async capable inside AsyncTestCase
 	function testSampleAsync() {
-		
-		// creates delegate to 'moreAsserts', time-out after 300 miliseconds
-		var asyncDel = createAsyncDel(onAssetsLoaded, 300);
-		
+	
 		// executing the delegate, returns onAssetsLoaded function
 		// test only ends when delegate finishes executing or timesout
-		urlLoader.addEventListener(Event.COMPLETE, createAsync(onTestsLoaded, 300));
+		urlLoader.addEventListener(Event.COMPLETE, createAsync(onAssetsLoaded, 300));
 	}
 	
 	function onAssetsLoaded(o:Dynamic) {
