@@ -4,8 +4,9 @@
 	"license": "MIT",
 	"tags": ["cross", "tests", "unit", "test"],
 	"description": "Haxe standard unit tests extension, providing async tests.",
-	"version": "1.0",
+	"version": "1.0.0",
+	"classPath": "src",
 	"releasenote": "First Release",
 	"contributors": ["prog4mr"],
-	"dependencies": { "": "", }
+	"dependencies": {}
 }
